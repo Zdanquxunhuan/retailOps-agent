@@ -19,3 +19,15 @@ retailops:
       password: '${POS_READ_PASSWORD}'
       schema: 'dbo'
       query-timeout-seconds: 5
+  diagnostics:
+    logs:
+      enabled: false
+      # Local read-only copy/mount of approved log files. No SSH or production log collection.
+      directory: './data/logs/meituan'
+      file-glob: '*.log'
+      charset: 'UTF-8'
+    knowledge:
+      enabled: true
+      # Reviewed generic operational SOP, contains no real orders or customer data.
+      location: 'classpath:knowledge/meituan-sales.json'
+    explanation-enabled: false

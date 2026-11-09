@@ -1,6 +1,8 @@
-# RetailOps Agent 首轮设计审阅入口
+# RetailOps Agent 文档入口
 
-开发进度更新：用户已授权开始真实接入代码开发，并要求不使用 Mock、不新增/运行测试。第一阶段实现与本地验证步骤见 [18-meituan-sales-implementation.md](18-meituan-sales-implementation.md) 及项目根 README。下面的“等待审核/不编码”描述保留为首轮设计历史，不代表最新任务状态。
+最新开发增量：**[Version 2 只读证据增强](version2/README.md)**，包括[版本变更](version2/changes.md)、[功能说明](version2/overview.md)、[设计文档](version2/design.md)、[使用文档](version2/usage.md)和[验证记录](version2/validation.md)。代码已实现，完整构建受环境依赖下载阻塞，真实联调待完成。
+
+继续遵循真实接入、不使用 Mock、不新增/运行测试的要求。第一阶段说明见 [18](18-meituan-sales-implementation.md)，业务事实见 [17](17-meituan-sale-confirmed-facts.md)。下方“等待审核/不编码”及初始工程描述是历史设计记录，不代表当前实现状态。
 
 设计日期：2026-11-09（Asia/Shanghai）。状态：设计草案，等待业务源码核验与用户审核。本轮只新增文档，不开发业务代码、不连接真实业务接口、不执行补推。
 

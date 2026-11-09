@@ -8,7 +8,11 @@ public record DiagnosisReport(UUID taskId, Instant startedAt, Instant finishedAt
                               String orderId, String storeCode, Outcome outcome,
                               String postingStatus, boolean replayExecuted,
                               String summary, List<String> recommendations,
-                              List<Evidence> evidence) {
+                              List<Evidence> evidence, DiagnosisDetails details) {
+    public DiagnosisReport withDetails(DiagnosisDetails value) {
+        return new DiagnosisReport(taskId, startedAt, Instant.now(), orderId, storeCode, outcome,
+                postingStatus, replayExecuted, summary, recommendations, evidence, value);
+    }
     public enum Outcome {
         NEED_INPUT, UNSUPPORTED_SCENARIO, MODEL_UNAVAILABLE,
         ORDER_QUERY_FAILED, OUTSIDE_QUERY_WINDOW, ORDER_UNCONFIRMED,
