@@ -1,0 +1,21 @@
+# Copy to application-local.yml (ignored by Git). Fill real values locally; never commit secrets.
+retailops:
+  meituan:
+    sdk-jar: 'E:/Repositories/Maven/cn/com/baby/shangou-platform-open-sdk/1.0.27.1-SNAPSHOT/shangou-platform-open-sdk-1.0.27.1-SNAPSHOT.jar'
+    sdk-config-directory: './config/meituan-sdk'
+    app-id: '${MEITUAN_APP_ID}'
+    app-secret: '${MEITUAN_APP_SECRET}'
+  users:
+    operator:
+      # A real BCrypt hash prefixed with {bcrypt}; no plaintext fallback or default password.
+      password-hash: '${RETAILOPS_OPERATOR_PASSWORD_HASH}'
+      stores:
+        - 'REPLACE_WITH_ACTUAL_APP_POI_CODE'
+  pos-routes:
+    # Exact Meituan app_poi_code. Values are administrator configuration, never model input.
+    '[REPLACE_WITH_ACTUAL_APP_POI_CODE]':
+      jdbc-url: '${POS_JDBC_URL}'
+      username: '${POS_READ_USERNAME}'
+      password: '${POS_READ_PASSWORD}'
+      schema: 'dbo'
+      query-timeout-seconds: 5

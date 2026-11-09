@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Local credentials, SDK files, and diagnosis audit data
+/config/application-local.yml
+/config/meituan-sdk/
+/data/
+/.cache/
+/lib/
