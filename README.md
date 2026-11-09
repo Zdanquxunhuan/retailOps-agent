@@ -1,10 +1,14 @@
 # RetailOps Agent
 
-当前版本：**Version 2 — 美团销售只读证据增强**。在真实 DeepSeek 意图识别、美团 SDK 和思迅 SQL Server 只读诊断基础上，增加受限日志扫描、带版本引用的本地 SOP 检索和可选 DeepSeek 解释选择。无 Mock 数据、无补推执行接口。
+当前版本：**Version 3 — 受控诊断 Agent 与远程压缩日志取证**。复用真实美团 SDK 和思迅 SQL Server 查询，增加 DeepSeek 原生工具调用、单任务上下文、逐步检查点、按订单日期±1天的只读 SFTP gzip 日志搜索和人工处理计划。无 Mock、无补推执行接口。
 
-[Version 2 文档入口](docs/version2/README.md) · [开发了什么](docs/version2/changes.md) · [功能说明](docs/version2/overview.md) · [设计文档](docs/version2/design.md) · [怎么使用](docs/version2/usage.md)
+[Version 3 文档入口](docs/version3/README.md) · [开发了什么](docs/version3/changes.md) · [功能说明](docs/version3/overview.md) · [设计及方法调用链](docs/version3/design.md) · [怎么使用](docs/version3/usage.md) · [服务器权限风险](docs/version3/security.md)
 
-交付状态：代码已实现，完整构建因当前环境无法解析 Maven Central 而受阻，业务联调待完成。按既定要求未新增/执行测试、未启动应用或请求真实业务服务。[验证记录](docs/version2/validation.md)区分静态检查与尚未完成的验证。
+交付状态：代码与文档已实现，Java 17 语法解析通过；完整 Maven 构建因 Maven Central DNS 失败受阻，未完成依赖/类型编译及真实联调。未新增或执行测试、未启动应用或调用真实业务服务。详见[验证记录](docs/version3/validation.md)。
+
+V3 入口：`POST /api/v1/diagnoses/agent/meituan-sales`，请求含 `message` 和 `orderDate`。远程日志默认关闭；必须先由管理员配置专用只读 SFTP 账号、固定主机、私钥和 known_hosts。不能用数据库 SELECT 权限替代服务器文件权限。
+
+V2 原接口保持可用：[Version 2 文档](docs/version2/README.md)。下方原固定链路和边界描述适用于V2；V3差异见上述文档。
 
 ## 已实现链路
 
@@ -40,3 +44,4 @@ $env:Path = "$env:JAVA_HOME\bin;$env:Path"
 - 两表查询假定所配置数据库内包含门店映射表与流水表。如实际跨库，需要先调整只读适配器配置/契约，不能盲目扩大数据库权限。
 
 完整设计及已核验业务事实见 [文档入口](docs/README.md)。早期设计目标不代表当前已实现能力。
+

@@ -1,7 +1,6 @@
 package com.yu.retailops.workflow;
 
 import com.yu.retailops.agent.OrderIntentExtractor;
-import com.yu.retailops.config.RetailOpsProperties;
 import com.yu.retailops.domain.DiagnosisReport;
 import com.yu.retailops.domain.DiagnosisReport.Evidence;
 import com.yu.retailops.domain.DiagnosisReport.Outcome;
@@ -19,7 +18,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Semaphore;
 
 @Service
 public class DiagnosisWorkflow {
@@ -29,24 +27,22 @@ public class DiagnosisWorkflow {
     private final StoreAccessPolicy access;
     private final DiagnosisStore store;
     private final DiagnosisEnrichment enrichment;
-    private final Semaphore permits;
+    private final DiagnosisCapacity capacity;
 
     public DiagnosisWorkflow(OrderIntentExtractor extractor, OrderDetailPort orders, PosFlowPort flows,
-                             StoreAccessPolicy access, DiagnosisStore store, RetailOpsProperties config,
-                             DiagnosisEnrichment enrichment) {
+                             StoreAccessPolicy access, DiagnosisStore store,
+                             DiagnosisEnrichment enrichment, DiagnosisCapacity capacity) {
         this.extractor = extractor;
         this.orders = orders;
         this.flows = flows;
         this.access = access;
         this.store = store;
         this.enrichment = enrichment;
-        this.permits = new Semaphore(config.maxConcurrentDiagnoses());
+        this.capacity = capacity;
     }
 
     public DiagnosisReport diagnose(String operator, String message) {
-        if (!permits.tryAcquire()) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "诊断任务繁忙，请稍后重试");
-        }
+        capacity.acquire();
         UUID task = UUID.randomUUID();
         Instant started = Instant.now();
         boolean recorded = false;
@@ -65,7 +61,7 @@ public class DiagnosisWorkflow {
             if (recorded) store.fail(task, operator, started, "INTERNAL_ERROR");
             throw e;
         } finally {
-            permits.release();
+            capacity.release();
         }
     }
 
@@ -156,3 +152,4 @@ public class DiagnosisWorkflow {
                 "UNKNOWN", false, summary, List.copyOf(recommendations), List.copyOf(evidence), null);
     }
 }
+

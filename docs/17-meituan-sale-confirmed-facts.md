@@ -112,3 +112,11 @@ SDK 由用户从美团官网下载到本地，不要求必须有公开 Maven 坐
 2. 用户进一步确认按订单号即可查询，不需要先提供门店。已停止将 systemParam 初始化代码作为继续开发的前置资料；第一阶段按 appId/appSecret 签名模式实现，凭证由后端配置，门店从成功响应取得并校验权限。
 
 后续补推阶段再按需核验 `pushToBi()`、`saveData()`、动态数据源路由、事务及两表的索引约束，不阻断当前只读实现。5–14 天错误分支的具体错误码、限流和精确时间边界可从 SDK/接口正文继续核验，无需为了补齐样本主动请求生产接口。如需识别过账，再提供实际查询方式。不使用 Mock、不运行现有 test 验证真实补推。
+
+
+
+## Version 3：用户补充的远程日志要求
+
+用户确认 `order.detail.query` 使用 `OrderGetOrderDetailRequest`，`pos.flow.query` 连接思迅查询销售/支付两表；日志来源为服务器 `/data/service/b-push-center-server/logs` 下 `b-push-center-server.log.YYYY-MM-DD.*.gz`。用户先提供订单日期，并检索前后各一天；人工参考命令为 `zcat ... | grep -A 200 '订单号'`。
+
+V3实现采用专用只读SFTP获取归档流、Java本地解压及逐行筛选，未开放Shell或执行该管道。数据库SELECT与SSH文件权限独立。没有收到真实主机、密钥、sshd/ACL、回调接收固定标记及多行关联格式；默认关闭远程读取，接收标记未确认时只提供订单线索。详见 [V3权限说明](version3/security.md)。本条是新增需求事实，不表示已连接服务器或完成联调。

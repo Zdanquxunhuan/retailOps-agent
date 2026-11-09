@@ -26,7 +26,7 @@ public class ApiExceptionHandler {
     @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class,
             MethodArgumentTypeMismatchException.class})
     ResponseEntity<Error> badRequest() {
-        return ResponseEntity.badRequest().body(new Error("INVALID_REQUEST", "请求格式错误；message须为1至2000字，taskId须为UUID", null));
+        return ResponseEntity.badRequest().body(new Error("INVALID_REQUEST", "请求格式错误；message须为1至2000字，taskId须为UUID，orderDate须为YYYY-MM-DD", null));
     }
 
     @ExceptionHandler(ResponseStatusException.class)
@@ -43,3 +43,4 @@ public class ApiExceptionHandler {
 
     public record Error(String code, String message, String reference) { }
 }
+

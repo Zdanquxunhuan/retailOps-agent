@@ -14,7 +14,7 @@ public record DiagnosisReport(UUID taskId, Instant startedAt, Instant finishedAt
                 postingStatus, replayExecuted, summary, recommendations, evidence, value);
     }
     public enum Outcome {
-        NEED_INPUT, UNSUPPORTED_SCENARIO, MODEL_UNAVAILABLE,
+        NEED_INPUT, UNSUPPORTED_SCENARIO, MODEL_UNAVAILABLE, INVESTIGATION_INCOMPLETE,
         ORDER_QUERY_FAILED, OUTSIDE_QUERY_WINDOW, ORDER_UNCONFIRMED,
         INVALID_PLATFORM_RESPONSE, POS_QUERY_FAILED, BOTH_FLOWS_PRESENT,
         PARTIAL_FLOWS_PRESENT, NO_FLOWS_FOUND
@@ -22,3 +22,4 @@ public record DiagnosisReport(UUID taskId, Instant startedAt, Instant finishedAt
     public record Evidence(String id, String tool, Instant observedAt, String status,
                            String detail, Long saleCount, Long payCount) { }
 }
+

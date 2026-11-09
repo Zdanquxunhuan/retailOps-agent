@@ -1,0 +1,17 @@
+# Administrator-reviewed EXAMPLE; do not replace sshd_config wholesale or apply automatically.
+# See docs/version3/security.md. Keep an existing administrator session during changes.
+# The chroot and every ancestor must be root-owned and not group/other writable.
+# /srv/retailops-log-jail/logs must be a READ-ONLY bind mount of the approved log directory.
+# The account must not have sudo, privileged groups, other SSH keys/shell access, or write ACLs.
+Match User retailops_logs
+    ChrootDirectory /srv/retailops-log-jail
+    ForceCommand internal-sftp -R -d /logs
+    AuthorizedKeysFile /etc/ssh/authorized_keys/%u
+    AuthenticationMethods publickey
+    PasswordAuthentication no
+    KbdInteractiveAuthentication no
+    DisableForwarding yes
+    PermitTTY no
+    PermitTunnel no
+    PermitUserRC no
+Match all
