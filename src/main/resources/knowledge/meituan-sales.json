@@ -1,0 +1,94 @@
+[
+  {
+    "id": "K01",
+    "version": "2.0.0",
+    "title": "两类流水均存在",
+    "source": "docs/17-meituan-sale-confirmed-facts.md",
+    "shared": true,
+    "stores": [],
+    "outcomes": [
+      "BOTH_FLOWS_PRESENT"
+    ],
+    "logCategories": [],
+    "explanation": "两类流水均存在满足当前写入存在性核验条件。过账后记录仍保留，不能据此判断过账完成，也未验证全部明细或金额。",
+    "nextCheck": "避免重复补推；如仍有业务异常，由运维核对明细、金额和独立的思迅过账状态来源。"
+  },
+  {
+    "id": "K02",
+    "version": "2.0.0",
+    "title": "单类流水存在",
+    "source": "docs/17-meituan-sale-confirmed-facts.md",
+    "shared": true,
+    "stores": [],
+    "outcomes": [
+      "PARTIAL_FLOWS_PRESENT"
+    ],
+    "logCategories": [],
+    "explanation": "仅一类流水存在不满足正常完成条件。旧逻辑任意一表有记录就跳过写入；两次查询还可能存在时序差异，不能直接断言永久性部分写入。",
+    "nextCheck": "核查进行中的处理、两表查询时序及关联异常；不要自动重推或直接补写流水。"
+  },
+  {
+    "id": "K03",
+    "version": "2.0.0",
+    "title": "两类流水未查到",
+    "source": "docs/17-meituan-sale-confirmed-facts.md",
+    "shared": true,
+    "stores": [],
+    "outcomes": [
+      "NO_FLOWS_FOUND"
+    ],
+    "logCategories": [],
+    "explanation": "本次固定查询未发现流水，不证明美团未推送，也不构成补推授权。日志未命中同样不能证明本地没有收到订单。",
+    "nextCheck": "核对门店映射、数据源、本地处理记录、订单业务资格和进行中的任务，再由人工判断后续预检。"
+  },
+  {
+    "id": "K04",
+    "version": "2.0.0",
+    "title": "思迅查询失败",
+    "source": "docs/17-meituan-sale-confirmed-facts.md",
+    "shared": true,
+    "stores": [],
+    "outcomes": [
+      "POS_QUERY_FAILED"
+    ],
+    "logCategories": [],
+    "explanation": "查询失败意味着流水状态未知，不能把失败转换为零条流水，也不能根据失败直接重推。",
+    "nextCheck": "由运维核对只读连接、三表所在库与schema、唯一门店映射、权限和超时；不要扩大为写库权限。"
+  },
+  {
+    "id": "K05",
+    "version": "2.0.0",
+    "title": "关联行出现数据库异常标记",
+    "source": "docs/version2/design.md",
+    "shared": true,
+    "stores": [],
+    "outcomes": [
+      "PARTIAL_FLOWS_PRESENT",
+      "NO_FLOWS_FOUND",
+      "POS_QUERY_FAILED"
+    ],
+    "logCategories": [
+      "DATABASE_EXCEPTION_MARKER"
+    ],
+    "explanation": "同一日志行包含匹配的订单号、美团门店及数据库异常类名，是排查线索。标记本身不足以证明它导致本次未同步，也不说明异常一定发生在思迅。",
+    "nextCheck": "在受控日志环境核对该行的时间、调用阶段、异常链及后续成功记录。不要把日志关键词直接当作已确认根因。"
+  },
+  {
+    "id": "K06",
+    "version": "2.0.0",
+    "title": "关联行出现网络超时标记",
+    "source": "docs/version2/design.md",
+    "shared": true,
+    "stores": [],
+    "outcomes": [
+      "PARTIAL_FLOWS_PRESENT",
+      "NO_FLOWS_FOUND",
+      "POS_QUERY_FAILED"
+    ],
+    "logCategories": [
+      "NETWORK_TIMEOUT_MARKER"
+    ],
+    "explanation": "关联日志行含网络超时类名。超时不能证明请求未执行，不能推断下游没有写入。",
+    "nextCheck": "核对请求方向、时间及后续结果，重新进行只读状态确认；结果不确定时不要盲目补推。"
+  }
+]

@@ -28,15 +28,18 @@ public class DiagnosisWorkflow {
     private final PosFlowPort flows;
     private final StoreAccessPolicy access;
     private final DiagnosisStore store;
+    private final DiagnosisEnrichment enrichment;
     private final Semaphore permits;
 
     public DiagnosisWorkflow(OrderIntentExtractor extractor, OrderDetailPort orders, PosFlowPort flows,
-                             StoreAccessPolicy access, DiagnosisStore store, RetailOpsProperties config) {
+                             StoreAccessPolicy access, DiagnosisStore store, RetailOpsProperties config,
+                             DiagnosisEnrichment enrichment) {
         this.extractor = extractor;
         this.orders = orders;
         this.flows = flows;
         this.access = access;
         this.store = store;
+        this.enrichment = enrichment;
         this.permits = new Semaphore(config.maxConcurrentDiagnoses());
     }
 
@@ -52,6 +55,7 @@ public class DiagnosisWorkflow {
             store.start(task, operator, started);
             recorded = true;
             DiagnosisReport report = execute(task, started, operator, message);
+            report = enrichment.enrich(operator, report);
             store.complete(operator, report);
             return report;
         } catch (AccessDeniedException e) {
@@ -70,6 +74,7 @@ public class DiagnosisWorkflow {
         if (saved == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "任务不存在");
         if (saved.report() != null && saved.report().storeCode() != null) {
             access.check(operator, saved.report().storeCode()); // Recheck after authorization changes.
+            enrichment.checkStoredCitations(operator, saved.report());
         }
         return saved;
     }
@@ -148,6 +153,6 @@ public class DiagnosisWorkflow {
     private DiagnosisReport report(UUID id, Instant start, String order, String branch, Outcome outcome,
                                    String summary, List<String> recommendations, List<Evidence> evidence) {
         return new DiagnosisReport(id, start, Instant.now(), order, branch, outcome,
-                "UNKNOWN", false, summary, List.copyOf(recommendations), List.copyOf(evidence));
+                "UNKNOWN", false, summary, List.copyOf(recommendations), List.copyOf(evidence), null);
     }
 }
