@@ -38,3 +38,8 @@ build/
 /data/
 /.cache/
 /lib/
+
+
+# Remote log account credentials and pinned host keys are local deployment material.
+config/ssh/*
+!config/ssh/sshd_config.example

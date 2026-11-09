@@ -1,6 +1,8 @@
 # RetailOps Agent 文档入口
 
-最新开发增量：**[Version 2 只读证据增强](version2/README.md)**，包括[版本变更](version2/changes.md)、[功能说明](version2/overview.md)、[设计文档](version2/design.md)、[使用文档](version2/usage.md)和[验证记录](version2/validation.md)。代码已实现，完整构建受环境依赖下载阻塞，真实联调待完成。
+最新增量：**[Version 3 受控诊断 Agent](version3/README.md)**，包括原生工具调用、上下文、逐步检查点、远程日期归档日志与处理计划。[配置使用](version3/usage.md)、[方法调用链](version3/design.md)、[服务器权限风险](version3/security.md)、[验证状态](version3/validation.md)。完整构建与真实联调仍待完成。
+
+历史开发增量：**[Version 2 只读证据增强](version2/README.md)**，包括[版本变更](version2/changes.md)、[功能说明](version2/overview.md)、[设计文档](version2/design.md)、[使用文档](version2/usage.md)和[验证记录](version2/validation.md)。代码已实现，完整构建受环境依赖下载阻塞，真实联调待完成。
 
 继续遵循真实接入、不使用 Mock、不新增/运行测试的要求。第一阶段说明见 [18](18-meituan-sales-implementation.md)，业务事实见 [17](17-meituan-sale-confirmed-facts.md)。下方“等待审核/不编码”及初始工程描述是历史设计记录，不代表当前实现状态。
 
@@ -33,3 +35,4 @@
 第一批只需美团销售完整调用链：接收 Controller → Service → DAO/Mapper → POS Client，相关 DTO、脱敏配置、表结构、成功/失败日志、平台查询/本地补推/POS 查询接口说明，以及实例部署与日志轮转说明。详细清单见 01。其余场景随后逐个提供，避免凭销售逻辑猜测退货与税率补充。
 
 最值得形成简历证据的是：跨实例证据追溯、LLM 与确定性执行的权限边界、可恢复工作流、审批绑定与幂等控制、超时不确定结果对账、带引用的 RAG 和可复现评测。目前它们是设计目标，不能写成已上线成果。
+
