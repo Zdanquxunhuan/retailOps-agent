@@ -8,6 +8,7 @@
 - [功能与结果说明](overview.md)
 - [设计与方法调用链](design.md)
 - [配置与使用](usage.md)
+- [真实验收详细手册：环境、启动、调用和源码链路](../../version3-test.md)
 - [远程服务器权限与风险](security.md)
 - [验证记录及手工验收](validation.md)
 
