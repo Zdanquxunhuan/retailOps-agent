@@ -4,6 +4,8 @@
 
 [Version 3 文档入口](docs/version3/README.md) · [开发了什么](docs/version3/changes.md) · [功能说明](docs/version3/overview.md) · [设计及方法调用链](docs/version3/design.md) · [怎么使用](docs/version3/usage.md) · [服务器权限风险](docs/version3/security.md)
 
+首次真实验收请按 [version3-test.md](version3-test.md) 操作：包括Windows/IDEA环境、配置与启动、分轮HTTP调用、源码类和方法链路、上下文传递、结果判读及故障定位。
+
 交付状态：代码与文档已实现，Java 17 语法解析通过；完整 Maven 构建因 Maven Central DNS 失败受阻，未完成依赖/类型编译及真实联调。未新增或执行测试、未启动应用或调用真实业务服务。详见[验证记录](docs/version3/validation.md)。
 
 V3 入口：`POST /api/v1/diagnoses/agent/meituan-sales`，请求含 `message` 和 `orderDate`。远程日志默认关闭；必须先由管理员配置专用只读 SFTP 账号、固定主机、私钥和 known_hosts。不能用数据库 SELECT 权限替代服务器文件权限。
